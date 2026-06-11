@@ -1,1 +1,667 @@
-# Aiagent
+import { useState } from "react";
+
+const ACCENT = "#6C63FF";
+const ACCENT2 = "#48D9A4";
+const BG = "#0F0F1A";
+const CARD_BG = "#1A1A2E";
+const CARD_BORDER = "#2A2A45";
+const TEXT = "#E8E8F0";
+const MUTED = "#8888AA";
+
+const styles = {
+  app: {
+    minHeight: "100vh",
+    background: BG,
+    color: TEXT,
+    fontFamily: "'Inter', 'Segoe UI', sans-serif",
+    padding: "0",
+  },
+  header: {
+    borderBottom: `1px solid ${CARD_BORDER}`,
+    padding: "20px 32px",
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    background: CARD_BG,
+  },
+  logo: {
+    width: 36,
+    height: 36,
+    background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
+    borderRadius: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 18,
+    fontWeight: 900,
+    color: "#fff",
+    letterSpacing: -1,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: TEXT,
+    letterSpacing: -0.5,
+  },
+  headerSub: {
+    fontSize: 12,
+    color: MUTED,
+    marginTop: 1,
+  },
+  main: {
+    maxWidth: 900,
+    margin: "0 auto",
+    padding: "40px 24px",
+  },
+  hero: {
+    textAlign: "center",
+    marginBottom: 40,
+  },
+  heroTitle: {
+    fontSize: 38,
+    fontWeight: 800,
+    letterSpacing: -1.5,
+    lineHeight: 1.1,
+    marginBottom: 12,
+    background: `linear-gradient(135deg, ${TEXT} 40%, ${ACCENT})`,
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+  heroSub: {
+    fontSize: 15,
+    color: MUTED,
+    maxWidth: 480,
+    margin: "0 auto",
+    lineHeight: 1.6,
+  },
+  inputCard: {
+    background: CARD_BG,
+    border: `1px solid ${CARD_BORDER}`,
+    borderRadius: 16,
+    padding: 24,
+    marginBottom: 28,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: MUTED,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 10,
+    display: "block",
+  },
+  textarea: {
+    width: "100%",
+    background: BG,
+    border: `1px solid ${CARD_BORDER}`,
+    borderRadius: 10,
+    color: TEXT,
+    fontSize: 14,
+    lineHeight: 1.7,
+    padding: "14px 16px",
+    resize: "vertical",
+    minHeight: 160,
+    outline: "none",
+    boxSizing: "border-box",
+    fontFamily: "inherit",
+    transition: "border-color 0.2s",
+  },
+  btnRow: {
+    display: "flex",
+    gap: 10,
+    marginTop: 14,
+    flexWrap: "wrap",
+  },
+  btnPrimary: {
+    background: `linear-gradient(135deg, ${ACCENT}, #8B5CF6)`,
+    color: "#fff",
+    border: "none",
+    borderRadius: 10,
+    padding: "12px 28px",
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    transition: "opacity 0.2s, transform 0.1s",
+    letterSpacing: 0.2,
+  },
+  btnSecondary: {
+    background: "transparent",
+    color: MUTED,
+    border: `1px solid ${CARD_BORDER}`,
+    borderRadius: 10,
+    padding: "12px 20px",
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "border-color 0.2s, color 0.2s",
+  },
+  sectionHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
+    marginTop: 36,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: TEXT,
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  },
+  sectionBadge: {
+    background: CARD_BORDER,
+    color: MUTED,
+    borderRadius: 20,
+    padding: "2px 10px",
+    fontSize: 12,
+    fontWeight: 600,
+  },
+  exportBtn: {
+    background: "transparent",
+    color: ACCENT2,
+    border: `1px solid ${ACCENT2}33`,
+    borderRadius: 8,
+    padding: "6px 14px",
+    fontSize: 12,
+    fontWeight: 600,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: 5,
+  },
+  flashcardGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+    gap: 14,
+  },
+  flashcard: {
+    background: CARD_BG,
+    border: `1px solid ${CARD_BORDER}`,
+    borderRadius: 14,
+    padding: 20,
+    cursor: "pointer",
+    transition: "border-color 0.2s, transform 0.15s",
+    minHeight: 130,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    position: "relative",
+    overflow: "hidden",
+  },
+  flashcardFlipped: {
+    background: `${ACCENT}12`,
+    border: `1px solid ${ACCENT}44`,
+  },
+  flashcardTag: {
+    fontSize: 10,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    color: MUTED,
+    marginBottom: 8,
+  },
+  flashcardQ: {
+    fontSize: 13,
+    fontWeight: 600,
+    color: TEXT,
+    lineHeight: 1.5,
+    flex: 1,
+  },
+  flashcardA: {
+    fontSize: 13,
+    color: ACCENT2,
+    lineHeight: 1.5,
+    flex: 1,
+  },
+  flashcardHint: {
+    fontSize: 10,
+    color: MUTED,
+    marginTop: 10,
+  },
+  conceptList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+  conceptItem: {
+    background: CARD_BG,
+    border: `1px solid ${CARD_BORDER}`,
+    borderRadius: 12,
+    padding: "14px 18px",
+    display: "flex",
+    gap: 14,
+    alignItems: "flex-start",
+  },
+  conceptDot: {
+    width: 8,
+    height: 8,
+    background: ACCENT,
+    borderRadius: "50%",
+    marginTop: 5,
+    flexShrink: 0,
+  },
+  conceptTerm: {
+    fontSize: 13,
+    fontWeight: 700,
+    color: TEXT,
+    marginBottom: 3,
+  },
+  conceptDef: {
+    fontSize: 13,
+    color: MUTED,
+    lineHeight: 1.6,
+  },
+  revisionList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+  revisionCard: {
+    background: CARD_BG,
+    border: `1px solid ${CARD_BORDER}`,
+    borderLeft: `3px solid ${ACCENT2}`,
+    borderRadius: 12,
+    padding: "16px 20px",
+  },
+  revisionTitle: {
+    fontSize: 13,
+    fontWeight: 700,
+    color: TEXT,
+    marginBottom: 10,
+  },
+  revisionBullet: {
+    fontSize: 13,
+    color: MUTED,
+    lineHeight: 1.7,
+    paddingLeft: 14,
+    position: "relative",
+  },
+  loader: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "60px 0",
+    gap: 16,
+  },
+  spinner: {
+    width: 40,
+    height: 40,
+    border: `3px solid ${CARD_BORDER}`,
+    borderTop: `3px solid ${ACCENT}`,
+    borderRadius: "50%",
+    animation: "spin 0.8s linear infinite",
+  },
+  loaderText: {
+    color: MUTED,
+    fontSize: 14,
+  },
+  errorBox: {
+    background: "#2A1010",
+    border: "1px solid #FF4444",
+    borderRadius: 10,
+    padding: "14px 18px",
+    color: "#FF8888",
+    fontSize: 13,
+    marginTop: 14,
+  },
+  statsRow: {
+    display: "flex",
+    gap: 12,
+    marginBottom: 32,
+    flexWrap: "wrap",
+  },
+  statChip: {
+    background: CARD_BG,
+    border: `1px solid ${CARD_BORDER}`,
+    borderRadius: 10,
+    padding: "10px 18px",
+    display: "flex",
+    gap: 8,
+    alignItems: "center",
+  },
+  statNum: {
+    fontSize: 20,
+    fontWeight: 800,
+    color: TEXT,
+  },
+  statLabel: {
+    fontSize: 11,
+    color: MUTED,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  emptyState: {
+    textAlign: "center",
+    padding: "60px 20px",
+    color: MUTED,
+  },
+  emptyIcon: {
+    fontSize: 40,
+    marginBottom: 12,
+    opacity: 0.4,
+  },
+};
+
+const SAMPLE_TEXT = `Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy, usually from the sun, into chemical energy stored in glucose. This process occurs primarily in the chloroplasts, which contain the green pigment chlorophyll.
+
+The overall equation for photosynthesis is:
+6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂
+
+There are two main stages:
+1. Light-dependent reactions (occur in the thylakoid membranes): Light is absorbed by chlorophyll and used to split water molecules (photolysis), releasing oxygen as a byproduct. ATP and NADPH are produced.
+2. Light-independent reactions / Calvin Cycle (occur in the stroma): CO₂ is fixed into organic molecules using the ATP and NADPH from the light reactions. The enzyme RuBisCO catalyzes carbon fixation.
+
+Factors affecting photosynthesis include light intensity, CO₂ concentration, and temperature. At the light compensation point, the rate of photosynthesis equals the rate of respiration.`;
+
+export default function FlashcardGenerator() {
+  const [inputText, setInputText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState(null);
+  const [flipped, setFlipped] = useState({});
+  const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState("flashcards");
+
+  const generate = async () => {
+    if (!inputText.trim()) {
+      setError("Please paste some lesson content first.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    setResult(null);
+    setFlipped({});
+
+    const prompt = `You are a study material generator. Analyze the lesson content below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
+
+The JSON must have exactly this structure:
+{
+  "flashcards": [
+    { "question": "...", "answer": "..." }
+  ],
+  "keyConcepts": [
+    { "term": "...", "definition": "..." }
+  ],
+  "revisionCards": [
+    { "title": "...", "bullets": ["...", "..."] }
+  ]
+}
+
+Rules:
+- Generate at least 10 flashcards (Q&A pairs)
+- Generate at least 6 key concepts with clear definitions
+- Generate 3-4 revision cards grouping related ideas
+- Be educational, precise, and student-friendly
+
+Lesson content:
+${inputText}`;
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: prompt }],
+        }),
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+
+      const raw = data.content.map((i) => i.text || "").join("");
+      const clean = raw.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+      setResult(parsed);
+      setActiveTab("flashcards");
+    } catch (err) {
+      setError("Failed to generate: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExportJSON = () => {
+    if (!result) return;
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "flashcards.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopyAll = () => {
+    if (!result) return;
+    let text = "=== FLASHCARDS ===\n";
+    result.flashcards.forEach((f, i) => {
+      text += `\nQ${i + 1}: ${f.question}\nA: ${f.answer}\n`;
+    });
+    text += "\n=== KEY CONCEPTS ===\n";
+    result.keyConcepts.forEach((c) => {
+      text += `\n${c.term}: ${c.definition}\n`;
+    });
+    text += "\n=== REVISION CARDS ===\n";
+    result.revisionCards.forEach((r) => {
+      text += `\n${r.title}:\n${r.bullets.map((b) => `• ${b}`).join("\n")}\n`;
+    });
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const tabStyle = (tab) => ({
+    background: activeTab === tab ? `${ACCENT}22` : "transparent",
+    color: activeTab === tab ? ACCENT : MUTED,
+    border: `1px solid ${activeTab === tab ? ACCENT + "44" : CARD_BORDER}`,
+    borderRadius: 8,
+    padding: "7px 16px",
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.2s",
+  });
+
+  return (
+    <div style={styles.app}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .flashcard-hover:hover { transform: translateY(-2px); border-color: ${ACCENT}44 !important; }
+        .btn-primary-hover:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn-sec-hover:hover { border-color: ${MUTED} !important; color: ${TEXT} !important; }
+        textarea:focus { border-color: ${ACCENT}88 !important; }
+      `}</style>
+
+      {/* Header */}
+      <div style={styles.header}>
+        <div style={styles.logo}>F</div>
+        <div>
+          <div style={styles.headerTitle}>FlashGen AI</div>
+          <div style={styles.headerSub}>Powered by Claude · Internship Day 6</div>
+        </div>
+      </div>
+
+      <div style={styles.main}>
+        {/* Hero */}
+        <div style={styles.hero}>
+          <div style={styles.heroTitle}>Paste lesson → Get flashcards</div>
+          <div style={styles.heroSub}>
+            Drop any lesson text below. AI will extract flashcards, key concepts, and revision notes instantly.
+          </div>
+        </div>
+
+        {/* Input */}
+        <div style={styles.inputCard}>
+          <label style={styles.label}>Lesson Content</label>
+          <textarea
+            style={styles.textarea}
+            placeholder="Paste your lesson notes, textbook content, lecture slides text..."
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            className="textarea-focus"
+          />
+          <div style={styles.btnRow}>
+            <button
+              style={styles.btnPrimary}
+              className="btn-primary-hover"
+              onClick={generate}
+              disabled={loading}
+            >
+              {loading ? "⏳ Generating..." : "✦ Generate Flashcards"}
+            </button>
+            <button
+              style={styles.btnSecondary}
+              className="btn-sec-hover"
+              onClick={() => setInputText(SAMPLE_TEXT)}
+            >
+              Load Sample
+            </button>
+            {inputText && (
+              <button
+                style={styles.btnSecondary}
+                className="btn-sec-hover"
+                onClick={() => { setInputText(""); setResult(null); setError(""); }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          {error && <div style={styles.errorBox}>⚠ {error}</div>}
+        </div>
+
+        {/* Loading */}
+        {loading && (
+          <div style={styles.loader}>
+            <div style={styles.spinner} />
+            <div style={styles.loaderText}>Claude is reading your lesson...</div>
+          </div>
+        )}
+
+        {/* Results */}
+        {result && (
+          <>
+            {/* Stats */}
+            <div style={styles.statsRow}>
+              <div style={styles.statChip}>
+                <div>
+                  <div style={styles.statNum}>{result.flashcards?.length || 0}</div>
+                  <div style={styles.statLabel}>Flashcards</div>
+                </div>
+              </div>
+              <div style={styles.statChip}>
+                <div>
+                  <div style={styles.statNum}>{result.keyConcepts?.length || 0}</div>
+                  <div style={styles.statLabel}>Key Concepts</div>
+                </div>
+              </div>
+              <div style={styles.statChip}>
+                <div>
+                  <div style={styles.statNum}>{result.revisionCards?.length || 0}</div>
+                  <div style={styles.statLabel}>Revision Cards</div>
+                </div>
+              </div>
+              <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center" }}>
+                <button style={styles.exportBtn} onClick={handleCopyAll}>
+                  {copied ? "✓ Copied!" : "⎘ Copy All"}
+                </button>
+                <button style={styles.exportBtn} onClick={handleExportJSON}>
+                  ↓ JSON
+                </button>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+              <button style={tabStyle("flashcards")} onClick={() => setActiveTab("flashcards")}>
+                🃏 Flashcards
+              </button>
+              <button style={tabStyle("concepts")} onClick={() => setActiveTab("concepts")}>
+                📖 Key Concepts
+              </button>
+              <button style={tabStyle("revision")} onClick={() => setActiveTab("revision")}>
+                📝 Revision Cards
+              </button>
+            </div>
+
+            {/* Flashcards Tab */}
+            {activeTab === "flashcards" && (
+              <>
+                <div style={{ fontSize: 12, color: MUTED, marginBottom: 14 }}>
+                  💡 Click any card to reveal the answer
+                </div>
+                <div style={styles.flashcardGrid}>
+                  {result.flashcards?.map((f, i) => (
+                    <div
+                      key={i}
+                      className="flashcard-hover"
+                      style={{ ...styles.flashcard, ...(flipped[i] ? styles.flashcardFlipped : {}) }}
+                      onClick={() => setFlipped((prev) => ({ ...prev, [i]: !prev[i] }))}
+                    >
+                      <div style={styles.flashcardTag}>
+                        {flipped[i] ? "Answer" : `Card ${i + 1}`}
+                      </div>
+                      {flipped[i] ? (
+                        <div style={styles.flashcardA}>{f.answer}</div>
+                      ) : (
+                        <div style={styles.flashcardQ}>{f.question}</div>
+                      )}
+                      <div style={styles.flashcardHint}>
+                        {flipped[i] ? "Click to see question" : "Click to reveal answer"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Key Concepts Tab */}
+            {activeTab === "concepts" && (
+              <div style={styles.conceptList}>
+                {result.keyConcepts?.map((c, i) => (
+                  <div key={i} style={styles.conceptItem}>
+                    <div style={styles.conceptDot} />
+                    <div>
+                      <div style={styles.conceptTerm}>{c.term}</div>
+                      <div style={styles.conceptDef}>{c.definition}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Revision Cards Tab */}
+            {activeTab === "revision" && (
+              <div style={styles.revisionList}>
+                {result.revisionCards?.map((r, i) => (
+                  <div key={i} style={styles.revisionCard}>
+                    <div style={styles.revisionTitle}>{r.title}</div>
+                    {r.bullets?.map((b, j) => (
+                      <div key={j} style={styles.revisionBullet}>• {b}</div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Empty state */}
+        {!result && !loading && (
+          <div style={styles.emptyState}>
+            <div style={styles.emptyIcon}>🎓</div>
+            <div style={{ fontSize: 14 }}>Your flashcards will appear here</div>
+            <div style={{ fontSize: 12, marginTop: 6 }}>Try the "Load Sample" button to see it in action</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
